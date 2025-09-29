@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../src/codespace/Codespace.ts"],
+  "sourcesContent": ["import SyncodeFile from \"./File.js\";\nimport User from \"./User.js\";\nimport crypto from \"node:crypto\"\n\nfunction generateCodespaceId() { \n  return crypto.randomBytes(16).toString('base64url');\n}\n\nclass Codespace {\n  codespaceId: string = \"\"\n  private users: Record<string, User> = {};\n  private files: SyncodeFile[] = [];\n\n  constructor() {\n    this.codespaceId = generateCodespaceId();\n  }\n\n  addUser(user: User) {\n    this.users[user.username] = user;\n  }\n}\n\nexport default Codespace"],
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAEA,yBAAmB;AAEnB,SAAS,sBAAsB;AAC7B,SAAO,mBAAAA,QAAO,YAAY,EAAE,EAAE,SAAS,WAAW;AACpD;AAEA,IAAM,YAAN,MAAgB;AAAA,EACd,cAAsB;AAAA,EACd,QAA8B,CAAC;AAAA,EAC/B,QAAuB,CAAC;AAAA,EAEhC,cAAc;AACZ,SAAK,cAAc,oBAAoB;AAAA,EACzC;AAAA,EAEA,QAAQ,MAAY;AAClB,SAAK,MAAM,KAAK,QAAQ,IAAI;AAAA,EAC9B;AACF;AAEA,IAAO,oBAAQ;",
+  "names": ["crypto"]
+}

@@ -2,22 +2,29 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
-  "main": "src/main.js",
+  "main": "src/main.ts",
   "scripts": {
-    "dev": "nodemon src/main.js",
-    "start": "node src/main.js"
+    "dev": "nodemon --watch src --ext ts --exec 'ts-node build.mts && node dist/main.js'",
+    "build": "ts-node build.mts",
+    "start": "node dist/main.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.17.0",
   "devDependencies": {
+    "esbuild": "^0.25.10",
     "nodemon": "^3.1.10"
   },
   "dependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.6.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
-    "socket.io": "^4.8.1"
+    "glob": "^11.0.3",
+    "socket.io": "^4.8.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
   }
 }

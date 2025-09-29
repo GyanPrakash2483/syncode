@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../src/sockets/mousemove.ts"],
+  "sourcesContent": ["import { Server, Socket } from \"socket.io\";\n\nexport default function mousemove(io: Server, socket: Socket) {\n  io.on('pointer', (data) => {\n    console.log(data);\n  })\n}"],
+  "mappings": ";;;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAEe,SAAR,UAA2B,IAAY,QAAgB;AAC5D,KAAG,GAAG,WAAW,CAAC,SAAS;AACzB,YAAQ,IAAI,IAAI;AAAA,EAClB,CAAC;AACH;",
+  "names": []
+}

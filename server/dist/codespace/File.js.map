@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../src/codespace/File.ts"],
+  "sourcesContent": ["class SyncodeFile {\n  filename: string = \"/newfile\";\n  content: string = \"\"\n\n  constructor(filename: string, content: string) {\n    this.filename = filename;\n    this.content = content;\n  }\n\n  updateContent(newcontent: string) {\n    this.content = newcontent;\n  }\n\n}\n\nexport default SyncodeFile"],
+  "mappings": ";;;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA,IAAM,cAAN,MAAkB;AAAA,EAChB,WAAmB;AAAA,EACnB,UAAkB;AAAA,EAElB,YAAY,UAAkB,SAAiB;AAC7C,SAAK,WAAW;AAChB,SAAK,UAAU;AAAA,EACjB;AAAA,EAEA,cAAc,YAAoB;AAChC,SAAK,UAAU;AAAA,EACjB;AAEF;AAEA,IAAO,eAAQ;",
+  "names": []
+}

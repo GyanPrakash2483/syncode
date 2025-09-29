@@ -1,35 +1,87 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+
+import React, { useRef, useState } from 'react';
+import 'primereact/resources/themes/soho-dark/theme.css';
+import 'primereact/resources/primereact.min.css';
+import 'primeicons/primeicons.css';
+import { InputText } from 'primereact/inputtext';
+import { Button } from 'primereact/button';
+import { Card } from 'primereact/card';
+import { useNavigate } from 'react-router';
+import api, { type CreateCodespaceResponse } from './api';
+import { Toast } from 'primereact/toast';
+
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const navigate = useNavigate();
+
+  // State for join form
+  const [joinUsername, setJoinUsername] = useState('');
+  const [codespaceId, setCodespaceId] = useState('');
+  // State for create form
+  const [createUsername, setCreateUsername] = useState('');
+
+  const toast = useRef<Toast>(null);
+
+  const handleJoinSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (await api.codespaceExist(codespaceId)) {
+      navigate(`/codespace/${codespaceId}?username=${joinUsername}`)
+    } else {
+      toast.current?.show({
+        severity: "warn",
+        summary: "Codespace Not Found",
+        detail: "No codespace with that ID exist. Try creating a new codespace instead."
+      })
+    }
+  };
+
+  const handleCreateSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const codespace: CreateCodespaceResponse = await api.createCodespace(createUsername);
+    if(codespace.success) {
+      navigate(`/codespace/${codespace.codespaceId}?username=${createUsername}`);
+    } else {
+      toast.current?.show({
+        severity: "error",
+        summary: "Error creating codespace",
+        detail: "Codespace could not be created, please report this incident."
+      })
+    }
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="min-h-screen bg-[#1e1e1e] text-[#d4d4d4] flex flex-col items-center justify-center p-6">
+      <Toast ref={toast} />
+      <h1 className="text-4xl font-bold mb-8 text-[#3794ff] tracking-wide">Syncode</h1>
+      <div className="flex flex-row gap-8 w-full max-w-3xl justify-center">
+        {/* Join Codespace Form */}
+        <Card title="Join Codespace" className="bg-[#252526] text-[#d4d4d4] flex-1 min-w-[320px]">
+          <form onSubmit={handleJoinSubmit}>
+            <div className="mb-4">
+              <label htmlFor="join-username" className="block text-[#d4d4d4] mb-1">Username</label>
+              <InputText id="join-username" value={joinUsername} onChange={e => setJoinUsername(e.target.value)} autoComplete="off" required className="w-full" />
+            </div>
+            <div className="mb-6">
+              <label htmlFor="codespace-id" className="block text-[#d4d4d4] mb-1">Codespace ID</label>
+              <InputText id="codespace-id" value={codespaceId} onChange={e => setCodespaceId(e.target.value)} autoComplete="off" required className="w-full" />
+            </div>
+            <Button label="Join" icon="pi pi-sign-in" type="submit" className="w-full p-button-primary" />
+          </form>
+        </Card>
+        {/* Create Codespace Form */}
+        <Card title="Create Codespace" className="bg-[#252526] text-[#d4d4d4] flex-1 min-w-[320px]">
+          <form onSubmit={handleCreateSubmit}>
+            <div className="mb-6">
+              <label htmlFor="create-username" className="block text-[#d4d4d4] mb-1">Username</label>
+              <InputText id="create-username" value={createUsername} onChange={e => setCreateUsername(e.target.value)} autoComplete="off" required className="w-full" />
+            </div>
+            <Button label="Create" icon="pi pi-plus" type="submit" className="w-full p-button-success" />
+          </form>
+        </Card>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
 
 export default App

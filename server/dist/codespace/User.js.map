@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../src/codespace/User.ts"],
+  "sourcesContent": ["class User {\n  username: string = \"unknown\"\n  mouseX: number = 0.5;\n  mouseY: number = 0.5;\n\n  constructor(username: string, mouseX: number, mouseY: number) {\n    this.username = username;\n    this.mouseX = mouseX;\n    this.mouseY = mouseY;\n  }\n\n  setMousePos(mouseX: number, mouseY: number) {\n    this.mouseX = mouseX;\n    this.mouseY = mouseY;\n  }\n}\n\nexport default User;"],
+  "mappings": ";;;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAA,IAAM,OAAN,MAAW;AAAA,EACT,WAAmB;AAAA,EACnB,SAAiB;AAAA,EACjB,SAAiB;AAAA,EAEjB,YAAY,UAAkB,QAAgB,QAAgB;AAC5D,SAAK,WAAW;AAChB,SAAK,SAAS;AACd,SAAK,SAAS;AAAA,EAChB;AAAA,EAEA,YAAY,QAAgB,QAAgB;AAC1C,SAAK,SAAS;AACd,SAAK,SAAS;AAAA,EAChB;AACF;AAEA,IAAO,eAAQ;",
+  "names": []
+}
