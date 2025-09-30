@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import CodespaceRegistry from "../codespace/CodespaceRegistry";
-import User from "../codespace/User";
 import Codespace from "../codespace/Codespace";
 
 export default function createCodespace(req: Request, res: Response) {
@@ -14,7 +13,6 @@ export default function createCodespace(req: Request, res: Response) {
   }
 
   const codespaceId: string = CodespaceRegistry.createNewCodespace();
-  const user: User = new User(username, 500, 500);
 
   const codespace: Codespace | null = CodespaceRegistry.getCodespace(codespaceId);
 
@@ -24,8 +22,6 @@ export default function createCodespace(req: Request, res: Response) {
     })
     return;
   }
-
-  codespace.addUser(user);
 
   res.status(200).send({
     success: true,

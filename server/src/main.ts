@@ -3,8 +3,8 @@ import cors from "cors";
 import http from "http";
 import { Server } from "socket.io";
 import codespaceExistController from "./controllers/codespaceExistController";
-import mousemove from "./sockets/mousemove";
 import createCodespace from "./controllers/createCodespaceController";
+import socketio from "./sockets/socketio";
 
 const app = express();
 
@@ -24,8 +24,7 @@ const io = new Server(server, {
 
 io.on('connection', (socket) => {
     console.log(`New socket connection: ${socket.id}`);
-
-    mousemove(io, socket);
+    socketio(io, socket);
 })
 
 server.listen(8080, () => {

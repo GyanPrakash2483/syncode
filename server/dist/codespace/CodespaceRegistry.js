@@ -33,6 +33,20 @@ __export(CodespaceRegistry_exports, {
 });
 module.exports = __toCommonJS(CodespaceRegistry_exports);
 
+// src/codespace/File.ts
+var SyncodeFile = class {
+  filename = "/newfile";
+  content = "";
+  constructor(filename, content) {
+    this.filename = filename;
+    this.content = content;
+  }
+  updateContent(newcontent) {
+    this.content = newcontent;
+  }
+};
+var File_default = SyncodeFile;
+
 // src/codespace/Codespace.ts
 var import_node_crypto = __toESM(require("node:crypto"));
 function generateCodespaceId() {
@@ -40,13 +54,32 @@ function generateCodespaceId() {
 }
 var Codespace = class {
   codespaceId = "";
-  users = {};
   files = [];
   constructor() {
     this.codespaceId = generateCodespaceId();
+    const welcomeFile = new File_default("welcome.txt", `
+      Welcome to Syncode
+      Start by creating a new file  
+    `);
+    this.files.push(welcomeFile);
+    const licenseFile = new File_default("license.txt", `
+      License
+      No naughty!
+    `);
+    this.files.push(licenseFile);
+    const codeFile = new File_default("src/index.js", `
+      console.log("Hello, World!");
+    `);
+    this.files.push(codeFile);
   }
-  addUser(user) {
-    this.users[user.username] = user;
+  updateFile(filename, content) {
+    const existingfile = this.files.find((file) => file.filename === filename);
+    if (existingfile) {
+      existingfile.content = content;
+    } else {
+      const newFile = new File_default(filename, content);
+      this.files.push(newFile);
+    }
   }
 };
 var Codespace_default = Codespace;

@@ -49260,6 +49260,20 @@ var import_http = __toESM(require("http"));
 var import_dist = __toESM(require_dist3(), 1);
 var { Server, Namespace, Socket } = import_dist.default;
 
+// src/codespace/File.ts
+var SyncodeFile = class {
+  filename = "/newfile";
+  content = "";
+  constructor(filename, content) {
+    this.filename = filename;
+    this.content = content;
+  }
+  updateContent(newcontent) {
+    this.content = newcontent;
+  }
+};
+var File_default = SyncodeFile;
+
 // src/codespace/Codespace.ts
 var import_node_crypto = __toESM(require("node:crypto"));
 function generateCodespaceId() {
@@ -49267,13 +49281,32 @@ function generateCodespaceId() {
 }
 var Codespace = class {
   codespaceId = "";
-  users = {};
   files = [];
   constructor() {
     this.codespaceId = generateCodespaceId();
+    const welcomeFile = new File_default("welcome.txt", `
+      Welcome to Syncode
+      Start by creating a new file  
+    `);
+    this.files.push(welcomeFile);
+    const licenseFile = new File_default("license.txt", `
+      License
+      No naughty!
+    `);
+    this.files.push(licenseFile);
+    const codeFile = new File_default("src/index.js", `
+      console.log("Hello, World!");
+    `);
+    this.files.push(codeFile);
   }
-  addUser(user) {
-    this.users[user.username] = user;
+  updateFile(filename, content) {
+    const existingfile = this.files.find((file) => file.filename === filename);
+    if (existingfile) {
+      existingfile.content = content;
+    } else {
+      const newFile = new File_default(filename, content);
+      this.files.push(newFile);
+    }
   }
 };
 var Codespace_default = Codespace;
@@ -49319,30 +49352,6 @@ function codespaceExistController(req, res) {
   });
 }
 
-// src/sockets/mousemove.ts
-function mousemove(io3, socket) {
-  io3.on("pointer", (data) => {
-    console.log(data);
-  });
-}
-
-// src/codespace/User.ts
-var User = class {
-  username = "unknown";
-  mouseX = 0.5;
-  mouseY = 0.5;
-  constructor(username, mouseX, mouseY) {
-    this.username = username;
-    this.mouseX = mouseX;
-    this.mouseY = mouseY;
-  }
-  setMousePos(mouseX, mouseY) {
-    this.mouseX = mouseX;
-    this.mouseY = mouseY;
-  }
-};
-var User_default = User;
-
 // src/controllers/createCodespaceController.ts
 function createCodespace(req, res) {
   const { username } = req.body;
@@ -49353,7 +49362,6 @@ function createCodespace(req, res) {
     return;
   }
   const codespaceId = CodespaceRegistry_default.createNewCodespace();
-  const user = new User_default(username, 500, 500);
   const codespace = CodespaceRegistry_default.getCodespace(codespaceId);
   if (!codespace) {
     res.status(200).send({
@@ -49361,10 +49369,39 @@ function createCodespace(req, res) {
     });
     return;
   }
-  codespace.addUser(user);
   res.status(200).send({
     success: true,
     codespaceId
+  });
+}
+
+// src/sockets/socketio.ts
+function socketio(io3, socket) {
+  socket.on("reguser", (data) => {
+    socket.join(data.codespaceId);
+    const codespace = CodespaceRegistry_default.getCodespace(data.codespaceId);
+    codespace?.files.forEach((file) => {
+      socket.emit("fileupdate", {
+        filename: file.filename,
+        content: file.content
+      });
+    });
+  });
+  socket.on("mousemove", (data) => {
+    socket.to(data.codespaceId).emit("mouseupdate", {
+      username: data.username,
+      mouseX: data.mouseX,
+      mouseY: data.mouseY
+    });
+  });
+  socket.on("clientfileupdate", (data) => {
+    const codespace = CodespaceRegistry_default.getCodespace(data.codespaceId);
+    codespace?.updateFile(data.filename, data.content);
+    console.log(data);
+    socket.to(data.codespaceId).emit("fileupdate", {
+      filename: data.filename,
+      content: data.content
+    });
   });
 }
 
@@ -49382,7 +49419,7 @@ var io2 = new Server(server, {
 });
 io2.on("connection", (socket) => {
   console.log(`New socket connection: ${socket.id}`);
-  mousemove(io2, socket);
+  socketio(io2, socket);
 });
 server.listen(8080, () => {
   console.log("Server listening at http://localhost:8080");

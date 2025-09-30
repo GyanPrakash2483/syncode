@@ -26,12 +26,12 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// src/codespace/Codespace.ts
-var Codespace_exports = {};
-__export(Codespace_exports, {
-  default: () => Codespace_default
+// src/sockets/socketio.ts
+var socketio_exports = {};
+__export(socketio_exports, {
+  default: () => socketio
 });
-module.exports = __toCommonJS(Codespace_exports);
+module.exports = __toCommonJS(socketio_exports);
 
 // src/codespace/File.ts
 var SyncodeFile = class {
@@ -83,4 +83,60 @@ var Codespace = class {
   }
 };
 var Codespace_default = Codespace;
-//# sourceMappingURL=Codespace.js.map
+
+// src/codespace/CodespaceRegistry.ts
+var CodespaceRegistryTemplate = class {
+  codespaces = {};
+  /**
+   * Creates a new codespace
+   * @returns ID of newly generated codespace.
+   */
+  createNewCodespace() {
+    const newcodespace = new Codespace_default();
+    this.codespaces[newcodespace.codespaceId] = newcodespace;
+    return newcodespace.codespaceId;
+  }
+  codespaceExists(codespaceId) {
+    return Boolean(this.codespaces[codespaceId]);
+  }
+  getCodespace(codespaceId) {
+    if (this.codespaceExists(codespaceId)) {
+      return this.codespaces[codespaceId];
+    } else {
+      return null;
+    }
+  }
+};
+var CodespaceRegistry = new CodespaceRegistryTemplate();
+var CodespaceRegistry_default = CodespaceRegistry;
+
+// src/sockets/socketio.ts
+function socketio(io, socket) {
+  socket.on("reguser", (data) => {
+    socket.join(data.codespaceId);
+    const codespace = CodespaceRegistry_default.getCodespace(data.codespaceId);
+    codespace?.files.forEach((file) => {
+      socket.emit("fileupdate", {
+        filename: file.filename,
+        content: file.content
+      });
+    });
+  });
+  socket.on("mousemove", (data) => {
+    socket.to(data.codespaceId).emit("mouseupdate", {
+      username: data.username,
+      mouseX: data.mouseX,
+      mouseY: data.mouseY
+    });
+  });
+  socket.on("clientfileupdate", (data) => {
+    const codespace = CodespaceRegistry_default.getCodespace(data.codespaceId);
+    codespace?.updateFile(data.filename, data.content);
+    console.log(data);
+    socket.to(data.codespaceId).emit("fileupdate", {
+      filename: data.filename,
+      content: data.content
+    });
+  });
+}
+//# sourceMappingURL=socketio.js.map

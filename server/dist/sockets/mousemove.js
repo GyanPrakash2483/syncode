@@ -19,10 +19,10 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 // src/sockets/mousemove.ts
 var mousemove_exports = {};
 __export(mousemove_exports, {
-  default: () => mousemove
+  default: () => socketio
 });
 module.exports = __toCommonJS(mousemove_exports);
-function mousemove(io, socket) {
+function socketio(io, socket) {
   io.on("pointer", (data) => {
     console.log(data);
   });
