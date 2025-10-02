@@ -1,4 +1,4 @@
-import { useNavigate, useParams, useSearchParams } from "react-router";
+import { useParams, useSearchParams } from "react-router";
 import { useEffect, useRef, useState } from "react";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
@@ -21,18 +21,21 @@ import type { MenuItem } from "primereact/menuitem";
 import { Dropdown } from "primereact/dropdown";
 import Terminal, { type TerminalRef } from "./components/Terminal";
 import Gemini from "./components/Gemini";
+import { SHA512 } from "./crypto";
+import SecurityViolation from "./components/SecurityViolation";
 
 
 interface mousepointer {
-  username: string
-  x: number,
-  y: number,
-  color: string
+  username: string;
+  x: number;
+  y: number;
+  color: string;
+  lastupdated: number;
 }
 
 interface SyncodeFile {
-  filename: string,
-  content: string
+  filename: string;
+  content: string;
 }
 
 function AskUsername({ codespaceId }: {
@@ -40,7 +43,6 @@ function AskUsername({ codespaceId }: {
 }) {
 
   const [inputUsername, setInputUsername] = useState("");
-  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#1e1e1e] text-[#d4d4d4]">
@@ -48,7 +50,7 @@ function AskUsername({ codespaceId }: {
         onSubmit={e => {
           e.preventDefault();
           if (inputUsername.trim()) {
-            navigate(`/codespace/${codespaceId}?username=${inputUsername.trim()}`)
+            location.href = `/codespace/${codespaceId}?username=${inputUsername.trim()}`;
           }
         }}
         className="bg-[#252526] p-8 rounded-lg shadow-lg border border-[#333] min-w-[320px]"
@@ -224,12 +226,14 @@ function Codespace() {
         if (existing) {
           existing.x = data.mouseX;
           existing.y = data.mouseY;
+          existing.lastupdated = Date.now()
         } else {
           newPointer.push({
             username: data.username,
             x: data.mouseX,
             y: data.mouseY,
-            color: "#000000".replace(/0/g, function () { return (~~(Math.random() * 16)).toString(16); })
+            color: "#000000".replace(/0/g, function () { return (~~(Math.random() * 16)).toString(16); }),
+            lastupdated: Date.now()
           })
         }
 
@@ -557,7 +561,7 @@ function Codespace() {
   }
 
   async function runJavascriptFile(filename: string) {
-    if(getFileContent(filename) === null) {
+    if (getFileContent(filename) === null) {
       return `${filename}: No such file`
     }
     const response = await fetch("https://emkc.org/api/v2/piston/execute", {
@@ -582,7 +586,7 @@ function Codespace() {
   }
 
   async function runTypescriptFile(filename: string) {
-    if(getFileContent(filename) === null) {
+    if (getFileContent(filename) === null) {
       return `${filename}: No such file`
     }
     const response = await fetch("https://emkc.org/api/v2/piston/execute", {
@@ -607,7 +611,7 @@ function Codespace() {
   }
 
   async function runPythonFile(filename: string) {
-    if(getFileContent(filename) === null) {
+    if (getFileContent(filename) === null) {
       return `${filename}: No such file`
     }
     const response = await fetch("https://emkc.org/api/v2/piston/execute", {
@@ -632,7 +636,7 @@ function Codespace() {
   }
 
   async function runCFile(filename: string) {
-    if(getFileContent(filename) === null) {
+    if (getFileContent(filename) === null) {
       return `${filename}: No such file`
     }
     const response = await fetch("https://emkc.org/api/v2/piston/execute", {
@@ -657,7 +661,7 @@ function Codespace() {
   }
 
   async function runCppFile(filename: string) {
-    if(getFileContent(filename) === null) {
+    if (getFileContent(filename) === null) {
       return `${filename}: No such file`
     }
     console.log(getFileContent(filename))
@@ -683,7 +687,7 @@ function Codespace() {
   }
 
   async function runJavaFile(filename: string) {
-    if(getFileContent(filename) === null) {
+    if (getFileContent(filename) === null) {
       return `${filename}: No such file`
     }
     const response = await fetch("https://emkc.org/api/v2/piston/execute", {
@@ -779,7 +783,7 @@ function Codespace() {
 
     let command: string;
 
-    switch(selectedLanguage?.language) {
+    switch (selectedLanguage?.language) {
       case "JavaScript":
         command = `node ${openFile}`
         break;
@@ -807,8 +811,28 @@ function Codespace() {
       default:
         command = "echo Not a valid executable format"
     }
-    console.log(command)
     terminalRef.current?.executeCommand(command)
+  }
+
+  const [licenseVerified, setLicenseVerified] = useState<boolean>(false);
+
+  useEffect(() => {
+    async function verifyLicense() {
+      const licenseKey = import.meta.env.VITE_LICENSE_KEY
+      const keyHash = await SHA512(licenseKey);
+      const expectedKeyHash = "3fda53d92a97e66c021fe1a96cdbde82e0ffb7c3abfafd6fd09736e7b1f80836dfa461ff485839ef22aab9893f4255a7892cf4d9a2e9bd601e90a01cd5cf0bcc";
+      if (keyHash === expectedKeyHash) {
+        setLicenseVerified(true);
+      }
+    }
+
+    verifyLicense();
+  }, [])
+
+  if (!licenseVerified) {
+    return (
+      <SecurityViolation />
+    )
   }
 
   return (
@@ -816,6 +840,7 @@ function Codespace() {
       {
         pointers.map((pointer, index) => (
           <div
+            hidden={Date.now() - pointer.lastupdated > 2000}
             key={index}
             className="h-[12px] w-[12px] absolute z-50"
             style={{

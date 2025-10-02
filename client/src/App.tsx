@@ -1,5 +1,5 @@
 
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import 'primereact/resources/themes/soho-dark/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
@@ -9,6 +9,8 @@ import { Card } from 'primereact/card';
 import { useNavigate } from 'react-router';
 import api, { type CreateCodespaceResponse } from './api';
 import { Toast } from 'primereact/toast';
+import { SHA512 } from './crypto';
+import SecurityViolation from './components/SecurityViolation';
 
 
 function App() {
@@ -49,6 +51,27 @@ function App() {
       })
     }
   };
+
+  const [licenseVerified, setLicenseVerified] = useState<boolean>(false);
+
+  useEffect(() => {
+    async function verifyLicense() {
+      const licenseKey = import.meta.env.VITE_LICENSE_KEY
+      const keyHash = await SHA512(licenseKey);
+      const expectedKeyHash = "3fda53d92a97e66c021fe1a96cdbde82e0ffb7c3abfafd6fd09736e7b1f80836dfa461ff485839ef22aab9893f4255a7892cf4d9a2e9bd601e90a01cd5cf0bcc";
+      if(keyHash === expectedKeyHash) {
+        setLicenseVerified(true);
+      }
+    }
+
+    verifyLicense();
+  }, [])
+
+  if(!licenseVerified) {
+    return (
+      <SecurityViolation />
+    )
+  }
 
   return (
     <div className="min-h-screen bg-[#1e1e1e] text-[#d4d4d4] flex flex-col items-center justify-center p-6">

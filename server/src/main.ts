@@ -7,10 +7,15 @@ import createCodespace from "./controllers/createCodespaceController";
 import socketio from "./sockets/socketio";
 import healthIndicator from "./controllers/healthIndicator";
 import gemini from "./controllers/gemini";
+import { config } from "dotenv";
+import socketProtocol from "./sockets/socketProtocol";
+
+config();
 
 const app = express();
 
 app.use(cors());
+app.use(socketProtocol)
 app.use(express.json());
 
 app.get("/", healthIndicator);

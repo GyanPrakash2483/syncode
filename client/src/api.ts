@@ -1,4 +1,4 @@
-const api_endpoint = "http://localhost:8080/api"
+const api_endpoint = `${import.meta.env.VITE_BACKEND_HOST}/api`
 
 export interface CreateCodespaceResponse {
   success: boolean,

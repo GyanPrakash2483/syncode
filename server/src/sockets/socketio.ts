@@ -1,6 +1,8 @@
 import { Server, Socket } from "socket.io";
 import CodespaceRegistry from "../codespace/CodespaceRegistry";
 
+const emitTimers: Record<string, NodeJS.Timeout> = {};
+
 export default function socketio(io: Server, socket: Socket) {
   socket.on('reguser', (data) => {
     socket.join(data.codespaceId);
@@ -26,12 +28,20 @@ export default function socketio(io: Server, socket: Socket) {
     const codespace = CodespaceRegistry.getCodespace(data.codespaceId);
     codespace?.updateFile(data.filename, data.content);
 
-    socket.to(data.codespaceId).emit('fileupdate', {
-      filename: data.filename,
-      content: data.content
-    })
+    if (emitTimers[data.codespaceId]) {
+      clearTimeout(emitTimers[data.codespaceId]);
+    }
 
-  })
+    // Schedule a new emit after 1 second
+    emitTimers[data.codespaceId] = setTimeout(() => {
+      socket.to(data.codespaceId).emit('fileupdate', {
+        filename: data.filename,
+        content: data.content
+      });
+
+      delete emitTimers[data.codespaceId];
+    }, 1000);
+  });
 
   socket.on('clientfiledelete', (data) => {
     const codespace = CodespaceRegistry.getCodespace(data.codespaceId);
