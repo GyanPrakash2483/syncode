@@ -1,5 +1,5 @@
 import { useNavigate, useParams, useSearchParams } from "react-router";
-import { useEffect, useRef, useState, version } from "react";
+import { useEffect, useRef, useState } from "react";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import 'primereact/resources/themes/soho-dark/theme.css';
@@ -560,7 +560,6 @@ function Codespace() {
         language: "javascript",
         version: getPistonLanguageVersion("javascript"),
         files: [{
-          name: filename,
           content: getFileContent(filename)
         }]
       })
@@ -586,7 +585,6 @@ function Codespace() {
         language: "typescript",
         version: getPistonLanguageVersion("typescript"),
         files: [{
-          name: filename,
           content: getFileContent(filename)
         }]
       })
@@ -612,7 +610,6 @@ function Codespace() {
         language: "c",
         version: getPistonLanguageVersion("c"),
         files: [{
-          name: filename,
           content: getFileContent(filename)
         }]
       })
@@ -632,13 +629,13 @@ function Codespace() {
     if(getFileContent(filename) === null) {
       return `${filename}: No such file`
     }
+    console.log(getFileContent(filename))
     const response = await fetch("https://emkc.org/api/v2/piston/execute", {
       method: "POST",
       body: JSON.stringify({
         language: "c++",
         version: getPistonLanguageVersion("c++"),
         files: [{
-          name: filename,
           content: getFileContent(filename)
         }]
       })
@@ -664,7 +661,6 @@ function Codespace() {
         language: "java",
         version: getPistonLanguageVersion("java"),
         files: [{
-          name: filename,
           content: getFileContent(filename)
         }]
       })

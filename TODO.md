@@ -1,0 +1,4 @@
+- More terminal commands
+- Fix terminal help section
+- Integrate ollama
+- Security measures

@@ -86,7 +86,6 @@ const Terminal: Terminal = (props: TerminalProps) => {
       onFocus={() => setIsTerminalActive(true)}
       onBlur={() => setIsTerminalActive(false)}
       onKeyDown={keyPressHandler}
-      onScroll={() => console.log("Hello")}
     >
       {
         terminalHistory.map((terminalblock, index) => {
