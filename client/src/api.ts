@@ -36,6 +36,23 @@ const api = {
     const data = await response.json();
 
     return data
+  },
+
+  googleGenerativeAI: async (username: string, filename: string, code: string, userQuery: string) => {
+    const response = await fetch(`${api_endpoint}/gemini`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username,
+        filename,
+        code,
+        userQuery
+      })
+    })
+
+    return response;
   }
 }
 

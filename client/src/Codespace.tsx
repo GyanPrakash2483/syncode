@@ -1034,6 +1034,7 @@ function Codespace() {
                 </SplitterPanel>
                 <SplitterPanel size={20}>
                   <Gemini
+                    username={username}
                     openfile={openFile}
                     code={getFileContent(openFile) || ""}
                   />
