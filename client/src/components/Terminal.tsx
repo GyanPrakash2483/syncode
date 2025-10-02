@@ -81,7 +81,7 @@ const Terminal: Terminal = (props: TerminalProps) => {
   return (
     <div 
       ref={terminalRef}
-      className="w-full h-full bg-gray-900 text-white rounded-sm p-2 overflow-scroll"
+      className="w-full h-full bg-gray-900 text-white rounded-sm p-2 overflow-scroll cursor-text"
       tabIndex={0}
       onFocus={() => setIsTerminalActive(true)}
       onBlur={() => setIsTerminalActive(false)}
