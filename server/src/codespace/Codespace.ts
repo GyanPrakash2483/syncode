@@ -1,5 +1,5 @@
 import SyncodeFile from "./File.js";
-import crypto from "node:crypto"
+import crypto from "node:crypto";
 
 function generateCodespaceId() { 
   return crypto.randomBytes(16).toString('base64url');
@@ -16,11 +16,6 @@ class Codespace {
       Start by creating a new file  
     `)
     this.files.push(welcomeFile);
-    const licenseFile = new SyncodeFile("license.txt", `
-      License
-      No naughty!
-    `)
-    this.files.push(licenseFile);
     const codeFile = new SyncodeFile("src/index.js", `
       console.log("Hello, World!");
     `)

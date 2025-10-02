@@ -106,6 +106,10 @@ function Codespace() {
 
   }
 
+  useEffect(() => {
+    document.documentElement.requestFullscreen();
+  }, [])
+
   function ToolbarStart() {
     return (
       <div className="text-xl font-bold">
