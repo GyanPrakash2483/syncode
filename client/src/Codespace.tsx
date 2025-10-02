@@ -716,7 +716,20 @@ function Codespace() {
 
     switch (baseCommand) {
       case 'help':
-        output = `Available commands: help, echo, date, clear`;
+        output = `Available commands: 
+        help - Diaplay this help section
+        echo - Display a line of text
+        date - Shows todays date
+        clear - Clears the terminal
+        node - Javascript code interpreter (Not original node runtime)
+        ts-node - Typescript code interpreter (Not original ts-node runtime)
+        crun - Syncode C code interpreter
+        cpprun - Syncode C++ code interpreter
+        javarun - Syncode Java code interpreter
+        python - Syncode Python interpreter (Not original python runtime)
+
+        This is not a bash shell, generic unix like behaviour should not be expected.
+        `;
         break;
 
       case 'echo':
