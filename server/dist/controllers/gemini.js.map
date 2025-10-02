@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../src/controllers/gemini.ts"],
-  "sourcesContent": ["import { Request, Response } from \"express\";\n\nexport default function gemini(req: Request, res: Response) {\n  \n  console.log(req.body)\n  \n  res.send(\"Hello\");\n}"],
-  "mappings": ";;;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAEe,SAAR,OAAwB,KAAc,KAAe;AAE1D,UAAQ,IAAI,IAAI,IAAI;AAEpB,MAAI,KAAK,OAAO;AAClB;",
-  "names": []
-}

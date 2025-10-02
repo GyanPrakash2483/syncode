@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../src/controllers/healthIndicator.ts"],
-  "sourcesContent": ["import { Request, Response } from \"express\";\n\nexport default function healthIndicator(req: Request, res: Response) {\n  res.status(200).send(\"Service Online\");\n}"],
-  "mappings": ";;;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAEe,SAAR,gBAAiC,KAAc,KAAe;AACnE,MAAI,OAAO,GAAG,EAAE,KAAK,gBAAgB;AACvC;",
-  "names": []
-}
