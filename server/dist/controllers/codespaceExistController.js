@@ -81,6 +81,18 @@ var Codespace = class {
       this.files.push(newFile);
     }
   }
+  deleteFile(filename) {
+    const fileIndex = this.files.findIndex((file) => file.filename === filename);
+    if (fileIndex != -1) {
+      this.files.splice(fileIndex, 1);
+    }
+  }
+  renameFile(prevFileName, newFileName) {
+    const existingFile = this.files.find((file) => file.filename === prevFileName);
+    if (existingFile) {
+      existingFile.filename = newFileName;
+    }
+  }
 };
 var Codespace_default = Codespace;
 

@@ -49308,6 +49308,18 @@ var Codespace = class {
       this.files.push(newFile);
     }
   }
+  deleteFile(filename) {
+    const fileIndex = this.files.findIndex((file) => file.filename === filename);
+    if (fileIndex != -1) {
+      this.files.splice(fileIndex, 1);
+    }
+  }
+  renameFile(prevFileName, newFileName) {
+    const existingFile = this.files.find((file) => file.filename === prevFileName);
+    if (existingFile) {
+      existingFile.filename = newFileName;
+    }
+  }
 };
 var Codespace_default = Codespace;
 
@@ -49397,11 +49409,22 @@ function socketio(io3, socket) {
   socket.on("clientfileupdate", (data) => {
     const codespace = CodespaceRegistry_default.getCodespace(data.codespaceId);
     codespace?.updateFile(data.filename, data.content);
-    console.log(data);
     socket.to(data.codespaceId).emit("fileupdate", {
       filename: data.filename,
       content: data.content
     });
+  });
+  socket.on("clientfiledelete", (data) => {
+    const codespace = CodespaceRegistry_default.getCodespace(data.codespaceId);
+    codespace?.deleteFile(data.filename);
+    socket.to(data.codespaceId).emit("deletefile", {
+      filename: data.filename
+    });
+  });
+  socket.on("clientfilerename", (data) => {
+    const codespace = CodespaceRegistry_default.getCodespace(data.codespaceId);
+    codespace?.renameFile(data.filename, data.newfilename);
+    socket.to(data.codespaceId).emit("filerename", data);
   });
 }
 

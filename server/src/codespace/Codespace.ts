@@ -38,6 +38,21 @@ class Codespace {
     }
   }
 
+  deleteFile(filename: string) {
+    const fileIndex = this.files.findIndex((file) => file.filename === filename);
+    if(fileIndex != -1) {
+      this.files.splice(fileIndex, 1);
+    }
+  }
+
+  renameFile(prevFileName: string, newFileName: string) {
+    const existingFile = this.files.find((file) => file.filename === prevFileName);
+
+    if(existingFile) {
+      existingFile.filename = newFileName;
+    }
+  }
+
 }
 
 export default Codespace
