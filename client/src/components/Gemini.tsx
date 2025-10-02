@@ -188,7 +188,7 @@ export default function Gemini(props: GeminiProps) {
         </div>
         :
         <div
-          className="flex-1 overflow-y-scroll p-2"
+          className="overflow-y-scroll p-2"
           ref={messageContainerRef}
           style={{
             height: initialMessageContainerHeight ? `${initialMessageContainerHeight}px` : "100%"
