@@ -1,4 +1,4 @@
-import { CircleStopIcon, Pause, Send, SendHorizontal } from "lucide-react";
+import { CircleStopIcon, SendHorizontal } from "lucide-react";
 import { Button } from "primereact/button";
 import React, { useState, useRef, useEffect } from "react";
 import api from "../api";
