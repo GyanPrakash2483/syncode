@@ -150,7 +150,6 @@ export default function Gemini(props: GeminiProps) {
   useEffect(() => {
     if (messageContainerRef.current) {
       setTimeout(() => {
-        console.log("Init H: " + messageContainerRef.current?.clientHeight);
         setInitialMessageContainerHeight(messageContainerRef.current?.clientHeight || 800);
       }, 3000)
     }

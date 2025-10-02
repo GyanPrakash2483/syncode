@@ -4,8 +4,8 @@
   "description": "",
   "main": "src/main.ts",
   "scripts": {
-    "dev": "nodemon --watch src --ext ts --exec 'ts-node build.mts && node dist/main.js'",
-    "build": "ts-node build.mts",
+    "dev": "nodemon --watch src --ext ts --exec 'node build.js && node dist/main.js'",
+    "build": "node build.js",
     "start": "node dist/main.js"
   },
   "keywords": [],

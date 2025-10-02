@@ -1,4 +1,3 @@
-// build.ts
 import { build } from "esbuild";
 import { glob } from "glob";
 
