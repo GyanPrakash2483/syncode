@@ -149,6 +149,7 @@ export default function Gemini(props: GeminiProps) {
   
   useEffect(() => {
     if (messageContainerRef.current) {
+      console.log("Init H: " + messageContainerRef.current.clientHeight);
       setInitialMessageContainerHeight(messageContainerRef.current.clientHeight);
     }
   }, [])
@@ -186,7 +187,7 @@ export default function Gemini(props: GeminiProps) {
         </div>
         :
         <div
-          className="h-full overflow-y-scroll p-2"
+          className="flex-1 overflow-y-scroll p-2"
           ref={messageContainerRef}
           style={{
             height: initialMessageContainerHeight ? `${initialMessageContainerHeight}px` : "100%"
