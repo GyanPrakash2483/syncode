@@ -20,6 +20,7 @@ import { BreadCrumb } from "primereact/breadcrumb";
 import type { MenuItem } from "primereact/menuitem";
 import { Dropdown } from "primereact/dropdown";
 import Terminal, { type TerminalRef } from "./components/Terminal";
+import Gemini from "./components/Gemini";
 
 
 interface mousepointer {
@@ -413,6 +414,11 @@ function Codespace() {
       extension: ".css"
     },
     {
+      language: "Python",
+      monacoId: "python",
+      extension: ".py"
+    },
+    {
       language: "C",
       monacoId: "c",
       extension: ".c"
@@ -600,6 +606,31 @@ function Codespace() {
 
   }
 
+  async function runPythonFile(filename: string) {
+    if(getFileContent(filename) === null) {
+      return `${filename}: No such file`
+    }
+    const response = await fetch("https://emkc.org/api/v2/piston/execute", {
+      method: "POST",
+      body: JSON.stringify({
+        language: "python",
+        version: getPistonLanguageVersion("python"),
+        files: [{
+          content: getFileContent(filename)
+        }]
+      })
+    })
+
+    const data = await response.json();
+
+    if (data.run.output) {
+      return data.run.output;
+    } else {
+      return "The program generated no output";
+    }
+
+  }
+
   async function runCFile(filename: string) {
     if(getFileContent(filename) === null) {
       return `${filename}: No such file`
@@ -720,6 +751,10 @@ function Codespace() {
         output = await runJavaFile(args[1]);
         break;
 
+      case 'python':
+        output = await runPythonFile(args[1]);
+        break;
+
       default:
         output = `${command}: command not found`;
     }
@@ -738,6 +773,10 @@ function Codespace() {
 
       case "TypeScript":
         command = `ts-node ${openFile}`
+        break;
+
+      case "Python":
+        command = `python ${openFile}`
         break;
 
       case "C":
@@ -994,7 +1033,10 @@ function Codespace() {
 
                 </SplitterPanel>
                 <SplitterPanel size={20}>
-                  Gemini Instance
+                  <Gemini
+                    openfile={openFile}
+                    code={getFileContent(openFile) || ""}
+                  />
                 </SplitterPanel>
               </Splitter>
             </SplitterPanel>

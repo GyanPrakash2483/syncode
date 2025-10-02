@@ -5,14 +5,18 @@ import { Server } from "socket.io";
 import codespaceExistController from "./controllers/codespaceExistController";
 import createCodespace from "./controllers/createCodespaceController";
 import socketio from "./sockets/socketio";
+import healthIndicator from "./controllers/healthIndicator";
+import gemini from "./controllers/gemini";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
+app.get("/", healthIndicator);
 app.get("/api/existcodespace", codespaceExistController);
 app.post("/api/createcodespace", createCodespace);
+app.post("/api/gemini", gemini);
 
 const server = http.createServer(app);
 

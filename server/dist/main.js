@@ -49428,12 +49428,25 @@ function socketio(io3, socket) {
   });
 }
 
+// src/controllers/healthIndicator.ts
+function healthIndicator(req, res) {
+  res.status(200).send("Service Online");
+}
+
+// src/controllers/gemini.ts
+function gemini(req, res) {
+  console.log(req.body);
+  res.send("Hello");
+}
+
 // src/main.ts
 var app = (0, import_express.default)();
 app.use((0, import_cors.default)());
 app.use(import_express.default.json());
+app.get("/", healthIndicator);
 app.get("/api/existcodespace", codespaceExistController);
 app.post("/api/createcodespace", createCodespace);
+app.post("/api/gemini", gemini);
 var server = import_http.default.createServer(app);
 var io2 = new Server(server, {
   cors: {

@@ -1,4 +1,5 @@
 - More terminal commands
 - Fix terminal help section
-- Integrate ollama
+- Integrate gemini
 - Security measures
+- UI Improvements
