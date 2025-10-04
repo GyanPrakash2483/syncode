@@ -32,7 +32,7 @@ function Message(props: MessageProps) {
   } else {
     return (
       <div
-        className="max-w-[90%] overflow-x-scroll w-fit p-2"
+        className="max-w-[400px] wrap-normal w-fit p-2"
       >
         <Markdown>
           {props.chatMessage.message}

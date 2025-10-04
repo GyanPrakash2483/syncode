@@ -11,15 +11,8 @@ class Codespace {
 
   constructor() {
     this.codespaceId = generateCodespaceId();
-    const welcomeFile = new SyncodeFile("welcome.txt", `
-      Welcome to Syncode
-      Start by creating a new file  
-    `)
-    this.files.push(welcomeFile);
-    const codeFile = new SyncodeFile("src/index.js", `
-      console.log("Hello, World!");
-    `)
-    this.files.push(codeFile);
+    const initialFile = new SyncodeFile("index.js", "/*\nHii,\nWelcome to syncode.\nSyncode is a real-time collaborative coding platform that enables multiple users to work together on projects seamlessly.\nIt displays each user's cursor, keeps code synchronized instantly, and provides a terminal and Gemini AI LLM to each user\nfor enhanced productivity.\nGet started by running this file.\n*/\nconsole.log(\"Hello from syncode\")\n");
+    this.files.push(initialFile);
   }
 
   updateFile(filename: string, content: string) {

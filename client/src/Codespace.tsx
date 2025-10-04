@@ -370,7 +370,7 @@ function Codespace() {
   }, [])
 
   const [currentDirectory, setCurrentDirectory] = useState("");
-  const [openFile, setOpenFile] = useState("welcome.txt");
+  const [openFile, setOpenFile] = useState("index.js");
 
   const newFileOP = useRef<OverlayPanel>(null);
   const [newFileName, setNewFileName] = useState("");
